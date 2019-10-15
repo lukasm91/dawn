@@ -29,7 +29,7 @@ extern "C" {
 /**
  * @brief Destroy the translation unit
  */
-extern void dawnTranslationUnitDestroy(dawnTranslationUnit_t* translationUnit);
+void dawnTranslationUnitDestroy(dawnTranslationUnit_t* translationUnit);
 
 /**
  * @brief Get the necessary preprocessor defines
@@ -39,8 +39,8 @@ extern void dawnTranslationUnitDestroy(dawnTranslationUnit_t* translationUnit);
  *                                the preprocessor definitions required
  * @param[out]  size              Size of array `ppDefines`
  */
-extern void dawnTranslationUnitGetPPDefines(const dawnTranslationUnit_t* translationUnit,
-                                            char*** ppDefines, int* size);
+void dawnTranslationUnitGetPPDefines(const dawnTranslationUnit_t* translationUnit,
+                                     char*** ppDefines, int* size);
 /**
  * @brief Get the generated code of the stencil `name`
  *
@@ -49,8 +49,7 @@ extern void dawnTranslationUnitGetPPDefines(const dawnTranslationUnit_t* transla
  * @returns newly allocated '\0' terminated string of the generated code of stencil `name` (returns
  *          `NULL` if stencil `name` was not found)
  */
-extern char* dawnTranslationUnitGetStencil(const dawnTranslationUnit_t* translationUnit,
-                                           const char* name);
+char* dawnTranslationUnitGetStencil(const dawnTranslationUnit_t* translationUnit, const char* name);
 
 /**
  * @brief Get the generated code for the global variables
@@ -58,7 +57,7 @@ extern char* dawnTranslationUnitGetStencil(const dawnTranslationUnit_t* translat
  * @param[in]   translationUnit   Translation unit to use
  * @returns newly allocated '\0' terminated string of the generated code of the globals
  */
-extern char* dawnTranslationUnitGetGlobals(const dawnTranslationUnit_t* translationUnit);
+char* dawnTranslationUnitGetGlobals(const dawnTranslationUnit_t* translationUnit);
 
 /** @} */
 

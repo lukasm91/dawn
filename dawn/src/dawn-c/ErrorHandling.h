@@ -31,7 +31,7 @@ extern "C" {
  *
  * @see dawnInstallFatalErrorHandler
  */
-extern void dawnFatalError(const char* reason);
+void dawnFatalError(const char* reason);
 
 /**
  * @brief Error handler callback
@@ -50,7 +50,7 @@ typedef void (*dawnFatalErrorHandler_t)(const char* reason);
  *
  * @param handler   New error handler (or if `NULL` is passed the default handler will be restored)
  */
-extern void dawnInstallFatalErrorHandler(dawnFatalErrorHandler_t handler);
+void dawnInstallFatalErrorHandler(dawnFatalErrorHandler_t handler);
 
 /**
  * @brief Store the the current state of the error which can be queried via
@@ -58,7 +58,7 @@ extern void dawnInstallFatalErrorHandler(dawnFatalErrorHandler_t handler);
  *
  * This error handler is **not** thread-safe.
  */
-extern void dawnStateErrorHandler(const char* reason);
+void dawnStateErrorHandler(const char* reason);
 
 /**
  * @brief Check the current error state
@@ -68,7 +68,7 @@ extern void dawnStateErrorHandler(const char* reason);
  *
  * @return 1 if there was an error, 0 otherwise
  */
-extern int dawnStateErrorHandlerHasError(void);
+int dawnStateErrorHandlerHasError(void);
 
 /**
  * @brief Query the current error state
@@ -77,12 +77,12 @@ extern int dawnStateErrorHandlerHasError(void);
  *
  * @return newly allocated `char*` with the current error message
  */
-extern char* dawnStateErrorHandlerGetErrorMessage(void);
+char* dawnStateErrorHandlerGetErrorMessage(void);
 
 /**
  * @brief Reset the current error state
  */
-extern void dawnStateErrorHandlerResetState(void);
+void dawnStateErrorHandlerResetState(void);
 
 /** @} */
 

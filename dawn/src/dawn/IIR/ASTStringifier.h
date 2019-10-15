@@ -24,13 +24,13 @@ namespace iir {
 // TODO refactor_AST: this is TEMPORARY, will be removed in the future
 //
 using ASTStringifier = ast::ASTStringifier;
-extern inline std::ostream& operator<<(std::ostream& os, const AST& ast) {
+inline std::ostream& operator<<(std::ostream& os, const AST& ast) {
   return ast::operator<<(os, ast);
 }
-extern inline std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Stmt>& expr) {
+inline std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Stmt>& expr) {
   return ast::operator<<(os, expr);
 }
-extern inline std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Expr>& stmt) {
+inline std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Expr>& stmt) {
   return ast::operator<<(os, stmt);
 }
 } // namespace iir

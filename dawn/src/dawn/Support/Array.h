@@ -29,8 +29,8 @@ using Array3i = std::array<int, 3>;
 using Array3ui = std::array<unsigned int, 3>;
 /// @}
 
-extern std::ostream& operator<<(std::ostream& os, const Array3i& array);
-extern std::ostream& operator<<(std::ostream& os, const Array2i& array);
+std::ostream& operator<<(std::ostream& os, const Array3i& array);
+std::ostream& operator<<(std::ostream& os, const Array2i& array);
 
 } // namespace dawn
 

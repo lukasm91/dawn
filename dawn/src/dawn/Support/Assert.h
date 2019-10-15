@@ -19,9 +19,9 @@
 
 namespace dawn {
 
-extern void assertionFailed(char const* expr, char const* function, char const* file, long line);
-extern void assertionFailedMsg(char const* expr, char const* msg, char const* function,
-                               char const* file, long line);
+void assertionFailed(char const* expr, char const* function, char const* file, long line);
+void assertionFailedMsg(char const* expr, char const* msg, char const* function, char const* file,
+                        long line);
 
 } // namespace dawn
 

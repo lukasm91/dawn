@@ -17,7 +17,7 @@
 
 namespace dawn {
 
-extern std::string decimalToOrdinal(int dec) {
+std::string decimalToOrdinal(int dec) {
   std::string decimal = std::to_string(dec);
   std::string suffix;
 

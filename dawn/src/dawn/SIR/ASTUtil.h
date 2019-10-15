@@ -30,9 +30,9 @@ namespace sir {
 /// @param newExpr  Expression to use as a replacement
 ///
 /// @ingroup sir
-extern void replaceOldExprWithNewExprInStmt(const std::shared_ptr<Stmt>& stmt,
-                                            const std::shared_ptr<Expr>& oldExpr,
-                                            const std::shared_ptr<Expr>& newExpr);
+void replaceOldExprWithNewExprInStmt(const std::shared_ptr<Stmt>& stmt,
+                                     const std::shared_ptr<Expr>& oldExpr,
+                                     const std::shared_ptr<Expr>& newExpr);
 
 /// @brief Replace `oldStmt` with `newStmt` in `stmt`
 ///
@@ -43,9 +43,9 @@ extern void replaceOldExprWithNewExprInStmt(const std::shared_ptr<Stmt>& stmt,
 /// @param newStmt  Statement to use as a replacement
 ///
 /// @ingroup sir
-extern void replaceOldStmtWithNewStmtInStmt(const std::shared_ptr<Stmt>& stmt,
-                                            const std::shared_ptr<Stmt>& oldStmt,
-                                            const std::shared_ptr<Stmt>& newStmt);
+void replaceOldStmtWithNewStmtInStmt(const std::shared_ptr<Stmt>& stmt,
+                                     const std::shared_ptr<Stmt>& oldStmt,
+                                     const std::shared_ptr<Stmt>& newStmt);
 
 /// @brief Try to evaluate the expression `expr`
 ///
@@ -62,15 +62,15 @@ extern void replaceOldStmtWithNewStmtInStmt(const std::shared_ptr<Stmt>& stmt,
 ///
 /// @ingroup sir
 /// @{
-extern bool evalExprAsDouble(const std::shared_ptr<Expr>& expr, double& result,
-                             const std::unordered_map<std::string, double>& variableMap =
-                                 std::unordered_map<std::string, double>());
-extern bool evalExprAsInteger(const std::shared_ptr<Expr>& expr, int& result,
-                              const std::unordered_map<std::string, double>& variableMap =
-                                  std::unordered_map<std::string, double>());
-extern bool evalExprAsBoolean(const std::shared_ptr<Expr>& expr, bool& result,
-                              const std::unordered_map<std::string, double>& variableMap =
-                                  std::unordered_map<std::string, double>());
+bool evalExprAsDouble(const std::shared_ptr<Expr>& expr, double& result,
+                      const std::unordered_map<std::string, double>& variableMap =
+                          std::unordered_map<std::string, double>());
+bool evalExprAsInteger(const std::shared_ptr<Expr>& expr, int& result,
+                       const std::unordered_map<std::string, double>& variableMap =
+                           std::unordered_map<std::string, double>());
+bool evalExprAsBoolean(const std::shared_ptr<Expr>& expr, bool& result,
+                       const std::unordered_map<std::string, double>& variableMap =
+                           std::unordered_map<std::string, double>());
 /// @}
 
 /// @brief Find all the different fields used in a given statement
@@ -81,7 +81,7 @@ extern bool evalExprAsBoolean(const std::shared_ptr<Expr>& expr, bool& result,
 /// @param ast              AST to evaluate
 /// @returns                a Vector of all the Fields used in the stencil
 /// @ingroup testing
-extern std::vector<sir::Field> getFieldFromStencilAST(const std::shared_ptr<AST>& ast);
+std::vector<sir::Field> getFieldFromStencilAST(const std::shared_ptr<AST>& ast);
 //
 // TODO refactor_AST: this is TEMPORARY, will be removed in the future
 //

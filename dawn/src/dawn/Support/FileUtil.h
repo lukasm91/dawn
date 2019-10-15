@@ -24,15 +24,15 @@ namespace dawn {
 /// This will only work on UNIX like platforms.
 ///
 /// @ingroup support
-extern StringRef getFilename(StringRef path);
+StringRef getFilename(StringRef path);
 
 /// @brief Extract the extension from `filename`
 /// @ingroup support
-extern StringRef getExtension(StringRef filename);
+StringRef getExtension(StringRef filename);
 
 /// @brief Extract the filename without extension from `path`
 /// @ingroup support
-extern StringRef getFilenameWithoutExtension(StringRef path);
+StringRef getFilenameWithoutExtension(StringRef path);
 
 } // namespace dawn
 

@@ -40,9 +40,9 @@ struct ASTStringifier {
 /// @name Stream operators
 /// @ingroup ast
 /// @{
-extern std::ostream& operator<<(std::ostream& os, const AST& ast);
-extern std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Stmt>& expr);
-extern std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Expr>& stmt);
+std::ostream& operator<<(std::ostream& os, const AST& ast);
+std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Stmt>& expr);
+std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Expr>& stmt);
 /// @}
 } // namespace ast
 } // namespace dawn

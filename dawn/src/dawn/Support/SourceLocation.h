@@ -42,9 +42,9 @@ struct SourceLocation {
   int Column;
 };
 
-extern bool operator==(const SourceLocation& a, const SourceLocation& b);
-extern bool operator!=(const SourceLocation& a, const SourceLocation& b);
-extern std::ostream& operator<<(std::ostream& os, const SourceLocation& sourceLocation);
+bool operator==(const SourceLocation& a, const SourceLocation& b);
+bool operator!=(const SourceLocation& a, const SourceLocation& b);
+std::ostream& operator<<(std::ostream& os, const SourceLocation& sourceLocation);
 
 } // namespace dawn
 

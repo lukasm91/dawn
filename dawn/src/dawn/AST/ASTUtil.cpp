@@ -513,7 +513,7 @@ private:
   std::vector<sir::Field> allFields_;
 };
 
-extern std::vector<sir::Field> getFieldFromStencilAST(const std::shared_ptr<AST>& ast) {
+std::vector<sir::Field> getFieldFromStencilAST(const std::shared_ptr<AST>& ast) {
   FieldFinder finder;
   ast->accept(finder);
   return finder.getFields();

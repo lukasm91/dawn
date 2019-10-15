@@ -33,8 +33,8 @@ extern "C" {
  *
  * @see dawnInstallDiagnosticsHandler
  */
-extern void dawnReportDiagnostic(DawnDiagnosticsKind diag, int line, int column,
-                                 const char* filename, const char* msg);
+void dawnReportDiagnostic(DawnDiagnosticsKind diag, int line, int column, const char* filename,
+                          const char* msg);
 
 /**
  * @brief Diagnostics handler callback
@@ -50,7 +50,7 @@ typedef void (*dawnDiagnosticsHandler_t)(DawnDiagnosticsKind diag, int line, int
  * @param handler   New diagnostics handler (or if `NULL` is passed the default handler will be
  *                  restored)
  */
-extern void dawnInstallDiagnosticsHandler(dawnDiagnosticsHandler_t handler);
+void dawnInstallDiagnosticsHandler(dawnDiagnosticsHandler_t handler);
 
 /**
  * @brief Run the compiler on the byte-string serialized SIR and return the generated code
@@ -61,8 +61,7 @@ extern void dawnInstallDiagnosticsHandler(dawnDiagnosticsHandler_t handler);
  * @param codeGenKind Code generation backend to use
  * @return Translation unit of the generated code or `NULL` on failure
  */
-extern dawnTranslationUnit_t* dawnCompile(const char* SIR, size_t size,
-                                          const dawnOptions_t* options);
+dawnTranslationUnit_t* dawnCompile(const char* SIR, size_t size, const dawnOptions_t* options);
 
 /** @} */
 

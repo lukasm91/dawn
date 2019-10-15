@@ -21,9 +21,9 @@ std::ostream& operator<<(std::ostream& os, const SourceLocation& sourceLocation)
   return (os << sourceLocation.Line << ":" << sourceLocation.Column);
 }
 
-extern bool operator==(const SourceLocation& a, const SourceLocation& b) {
+bool operator==(const SourceLocation& a, const SourceLocation& b) {
   return a.Line == b.Line && a.Column == b.Column;
 }
-extern bool operator!=(const SourceLocation& a, const SourceLocation& b) { return !(a == b); }
+bool operator!=(const SourceLocation& a, const SourceLocation& b) { return !(a == b); }
 
 } // namespace dawn

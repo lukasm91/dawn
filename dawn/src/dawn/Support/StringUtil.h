@@ -116,7 +116,7 @@ public:
 /// @ingroup core
 ///
 /// @ingroup support
-extern std::string indent(const std::string& string, int amount = 2);
+std::string indent(const std::string& string, int amount = 2);
 
 /// @brief Convert a decimal integer to an ordinal string
 ///
@@ -126,7 +126,7 @@ extern std::string indent(const std::string& string, int amount = 2);
 /// @endcode
 ///
 /// @ingroup support
-extern std::string decimalToOrdinal(int dec);
+std::string decimalToOrdinal(int dec);
 
 /// @}
 

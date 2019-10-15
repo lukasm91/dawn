@@ -88,7 +88,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, Type type);
 };
 
-extern std::ostream& operator<<(std::ostream& os, Type type);
+std::ostream& operator<<(std::ostream& os, Type type);
 
 } // namespace dawn
 
