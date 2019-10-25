@@ -32,7 +32,6 @@ Extent limit(Extent lhs, Extent const& rhs) {
   return rhs;
 }
 
-Extents::Extents() : Extents(HorizontalExtent{}, Extent{}) {}
 Extents::Extents(HorizontalExtent const& hExtent, Extent const& vExtent)
     : verticalExtent_(vExtent), horizontalExtent_(hExtent) {}
 
@@ -44,7 +43,7 @@ Extents::Extents(ast::cartesian_, int extent1minus, int extent1plus, int extent2
     : verticalExtent_(extent3minus, extent3plus),
       horizontalExtent_(ast::cartesian, extent1minus, extent1plus, extent2minus, extent2plus) {}
 
-Extents::Extents(ast::cartesian_) : horizontalExtent_(ast::cartesian) {}
+// Extents::Extents(ast::cartesian_) : horizontalExtent_(ast::cartesian) {}
 
 void Extents::merge(const Extents& other) {
   horizontalExtent_.merge(other.horizontalExtent_);

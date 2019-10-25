@@ -30,8 +30,7 @@ public:
   /// @{
   FieldAccessExtents(std::optional<Extents> const& readExtents,
                      std::optional<Extents> const& writeExtents)
-      : readAccessExtents_(readExtents), writeAccessExtents_(writeExtents),
-        totalExtents_(ast::cartesian) {
+      : readAccessExtents_(readExtents), writeAccessExtents_(writeExtents) {
     updateTotalExtents();
   }
 
@@ -70,7 +69,7 @@ private:
   std::optional<Extents> readAccessExtents_;
   std::optional<Extents> writeAccessExtents_;
   Extents totalExtents_;
-};
+}; // namespace iir
 
 } // namespace iir
 } // namespace dawn

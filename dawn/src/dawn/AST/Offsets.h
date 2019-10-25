@@ -73,7 +73,6 @@ class HorizontalOffset {
 public:
   HorizontalOffset() = default;
 
-  explicit HorizontalOffset(cartesian_) : impl_(std::make_unique<CartesianOffset>()) {}
   HorizontalOffset(cartesian_, int iOffset, int jOffset)
       : impl_(std::make_unique<CartesianOffset>(iOffset, jOffset)) {}
   HorizontalOffset(HorizontalOffset const& other) { *this = other; }
@@ -133,7 +132,6 @@ public:
       : horizontalOffset_(cartesian, i, j), verticalOffset_(k) {}
   Offsets(cartesian_, std::array<int, 3> const& structuredOffsets)
       : Offsets(cartesian, structuredOffsets[0], structuredOffsets[1], structuredOffsets[2]) {}
-  explicit Offsets(cartesian_) : horizontalOffset_(cartesian) {}
 
   int verticalOffset() const { return verticalOffset_; }
   HorizontalOffset const& horizontalOffset() const { return horizontalOffset_; }

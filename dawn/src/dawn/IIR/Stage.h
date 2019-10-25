@@ -52,13 +52,6 @@ class Stage : public IIRNode<MultiStage, Stage, DoMethod> {
   ast::Expr::LocationType type_ = ast::Expr::LocationType::Cells;
 
   struct DerivedInfo {
-
-    DerivedInfo() : extents_{ast::cartesian} {}
-    DerivedInfo(DerivedInfo&&) = default;
-    DerivedInfo(const DerivedInfo&) = default;
-    DerivedInfo& operator=(DerivedInfo&&) = default;
-    DerivedInfo& operator=(const DerivedInfo&) = default;
-
     void clear();
 
     /// Declaration of the fields of this stage

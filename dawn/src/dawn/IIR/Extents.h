@@ -171,7 +171,6 @@ public:
     *this = HorizontalExtent(ast::cartesian, hOffset.offsetI(), hOffset.offsetI(),
                              hOffset.offsetJ(), hOffset.offsetJ());
   }
-  HorizontalExtent(ast::cartesian_) : impl_(std::make_unique<CartesianExtent>()) {}
   HorizontalExtent(ast::cartesian_, int iMinus, int iPlus, int jMinus, int jPlus)
       : impl_(std::make_unique<CartesianExtent>(iMinus, iPlus, jMinus, jPlus)) {}
 
@@ -251,12 +250,11 @@ public:
 
   /// @name Constructors and Assignment
   /// @{
-  Extents();
+  Extents() = default;
   Extents(const ast::Offsets& offset);
   Extents(ast::cartesian_, int extent1minus, int extent1plus, int extent2minus, int extent2plus,
           int extent3minus, int extent3plus);
   Extents(HorizontalExtent const& hExtent, Extent const& vExtent);
-  explicit Extents(ast::cartesian_);
   /// @}
 
   bool hasVerticalCenter() const;

@@ -677,7 +677,7 @@ void MSCodeGen::generateFinalFlushKCaches(MemberFunction& cudaKernel, const iir:
 
 void MSCodeGen::generateCudaKernelCode() {
 
-  iir::Extents maxExtents(ast::cartesian);
+  iir::Extents maxExtents;
   for(const auto& stage : iterateIIROver<iir::Stage>(*ms_)) {
     maxExtents.merge(stage->getExtents());
   }

@@ -414,8 +414,8 @@ void StencilFunctionInstantiation::update() {
     int AccessID = argIdxCallerAccessIDPair.second;
     if(!inputFields.count(AccessID) && !outputFields.count(AccessID) &&
        !inputOutputFields.count(AccessID)) {
-      inputFields.emplace(AccessID, Field(AccessID, Field::IK_Input, Extents{ast::cartesian},
-                                          Extents{ast::cartesian}, interval_));
+      inputFields.emplace(AccessID,
+                          Field(AccessID, Field::IK_Input, Extents{}, Extents{}, interval_));
       unusedFields_.insert(AccessID);
     }
   }
@@ -624,7 +624,7 @@ void StencilFunctionInstantiation::closeFunctionBindings(const std::vector<int>&
         int AccessID = stencilInstantiation_->nextUID();
 
         setCallerAccessIDOfArgField(argIdx, AccessID);
-        setCallerInitialOffsetFromAccessID(AccessID, ast::Offsets{ast::cartesian});
+        setCallerInitialOffsetFromAccessID(AccessID, ast::Offsets{});
       }
     }
   }
