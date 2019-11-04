@@ -29,10 +29,11 @@ enum edge_color { horizontal = 0, diagonal = 1, vertical = 2 };
 class Vertex {
 public:
   Vertex() = default;
-  Vertex(int x, int y, int id) : x_(x), y_(y), id_(id) {}
+  Vertex(int x, int y, int z, int id) : x_(x), y_(y), z_(z), id_(id) {}
 
   int x() const { return x_; }
   int y() const { return y_; }
+  int z() const { return z_; }
   int id() const { return id_; }
 
   Edge const& edge(size_t i) const;
@@ -49,6 +50,7 @@ private:
   int id_;
   int x_;
   int y_;
+  int z_;
 
   std::vector<Edge*> edges_;
   std::vector<Face*> faces_;
@@ -106,182 +108,191 @@ private:
 
 class Grid {
 public:
-  Grid(int nx, int ny, bool periodic = false)
-      : faces_(2 * nx * ny), vertices_(periodic ? nx * ny : (nx + 1) * (ny + 1)),
-        edges_(periodic ? 3 * nx * ny : 3 * (nx + 1) * (ny + 1)), nx_(nx), ny_(ny) {
-    auto edge_at = [&](int i, int j, int c) -> Edge& {
+  Grid(int nx, int ny, int nz, bool periodic = false)
+      : faces_(2 * nx * ny * nz), vertices_(periodic ? nx * ny * nz : (nx + 1) * (ny + 1) * nz),
+        edges_(periodic ? 3 * nx * ny * nz : 3 * (nx + 1) * (ny + 1) * nz), nx_(nx), ny_(ny),
+        nz_(nz) {
+    auto edge_at = [&](int i, int j, int k, int c) -> Edge& {
       if(periodic)
-        return edges_.at(3 * (((j + ny) % ny) * nx + ((i + nx) % nx)) + c);
+        return edges_.at(((((j + ny) % ny) * nx + ((i + nx) % nx)) * 3 + c) * nz + k);
       else
-        return edges_.at(3 * (j * (nx + 1) + i) + c);
+        return edges_.at(((j * (nx + 1) + i) * 3 + c) * nz + k);
     };
-    auto vertex_at = [&](int i, int j) -> Vertex& {
+    auto vertex_at = [&](int i, int j, int k) -> Vertex& {
       if(periodic)
-        return vertices_.at(((j + ny) % ny) * nx + ((i + nx) % nx));
+        return vertices_.at((((j + ny) % ny) * nx + ((i + nx) % nx)) * nz + k);
       else
-        return vertices_.at(j * (nx + 1) + i);
+        return vertices_.at((j * (nx + 1) + i) * nz + k);
     };
-    auto face_at = [&](int i, int j, int c) -> Face& {
+    auto face_at = [&](int i, int j, int k, int c) -> Face& {
       if(periodic)
-        return faces_.at(2 * (((j + ny) % ny) * nx + ((i + nx) % nx)) + c);
+        return faces_.at(((((j + ny) % ny) * nx + ((i + nx) % nx)) * 2 + c) * nz + k);
       else
-        return faces_.at(2 * (j * nx + i) + c);
+        return faces_.at(((j * nx + i) * 2 + c) * nz + k);
     };
 
-    for(int j = 0; j < ny; ++j)
-      for(int i = 0; i < nx; ++i)
-        for(int c = 0; c < 2; ++c) {
-          auto& f = face_at(i, j, c);
-          f = Face(&f - faces_.data(), (face_color)c);
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < ny; ++j)
+        for(int i = 0; i < nx; ++i)
+          for(int c = 0; c < 2; ++c) {
+            auto& f = face_at(i, j, k, c);
+            f = Face(&f - faces_.data(), (face_color)c);
+          }
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
+        for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
+          auto& v = vertex_at(i, j, k);
+          v = Vertex(i, j, k, &v - vertices_.data());
         }
-    for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
-      for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
-        auto& v = vertex_at(i, j);
-        v = Vertex(i, j, &v - vertices_.data());
-      }
 
-    for(int j = 0; j < ny; ++j)
-      for(int i = 0; i < nx; ++i) {
-        auto& f_uw = face_at(i, j, face_color::upward);
-        //   .
-        //   |\
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < ny; ++j)
+        for(int i = 0; i < nx; ++i) {
+          auto& f_uw = face_at(i, j, k, face_color::upward);
+          //   .
+          //   |\
         //  0| \ 1
-        //   |  \ 
+          //   |  \ 
         //   ----'
-        //     2
-        f_uw.add_edge(edge_at(i, j, edge_color::vertical));
-        f_uw.add_edge(edge_at(i, j, edge_color::diagonal));
-        f_uw.add_edge(edge_at(i, j + 1, edge_color::horizontal));
+          //     2
+          f_uw.add_edge(edge_at(i, j, k, edge_color::vertical));
+          f_uw.add_edge(edge_at(i, j, k, edge_color::diagonal));
+          f_uw.add_edge(edge_at(i, j + 1, k, edge_color::horizontal));
 
-        //   0
-        //   .
-        //   |\ 
+          //   0
+          //   .
+          //   |\ 
         //   | \ 
         //   |  \ 
         //   ----' 1
-        //  2
-        f_uw.add_vertex(vertex_at(i, j));
-        f_uw.add_vertex(vertex_at(i + 1, j + 1));
-        f_uw.add_vertex(vertex_at(i, j + 1));
+          //  2
+          f_uw.add_vertex(vertex_at(i, j, k));
+          f_uw.add_vertex(vertex_at(i + 1, j + 1, k));
+          f_uw.add_vertex(vertex_at(i, j + 1, k));
 
-        // downward
-        auto& f_dw = face_at(i, j, face_color::downward);
-        //     1
-        //   ----
-        //   \  |
-        //  0 \ |2
-        //     \|
-        //      ^
-        f_dw.add_edge(edge_at(i, j, edge_color::diagonal));
-        f_dw.add_edge(edge_at(i, j, edge_color::horizontal));
-        f_dw.add_edge(edge_at(i + 1, j, edge_color::vertical));
+          // downward
+          auto& f_dw = face_at(i, j, k, face_color::downward);
+          //     1
+          //   ----
+          //   \  |
+          //  0 \ |2
+          //     \|
+          //      ^
+          f_dw.add_edge(edge_at(i, j, k, edge_color::diagonal));
+          f_dw.add_edge(edge_at(i, j, k, edge_color::horizontal));
+          f_dw.add_edge(edge_at(i + 1, j, k, edge_color::vertical));
 
-        //        1
-        // 0 ----
-        //   \  |
-        //    \ |
-        //     \|
-        //      ^ 2
-        f_dw.add_vertex(vertex_at(i, j));
-        f_dw.add_vertex(vertex_at(i + 1, j));
-        f_dw.add_vertex(vertex_at(i + 1, j + 1));
-      }
+          //        1
+          // 0 ----
+          //   \  |
+          //    \ |
+          //     \|
+          //      ^ 2
+          f_dw.add_vertex(vertex_at(i, j, k));
+          f_dw.add_vertex(vertex_at(i + 1, j, k));
+          f_dw.add_vertex(vertex_at(i + 1, j + 1, k));
+        }
 
-    for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
-      for(int i = 0; i < nx; ++i) {
-        //     0
-        // 0 ----- 1
-        //     1
-        auto& e = edge_at(i, j, edge_color::horizontal);
-        e = Edge(&e - edges_.data(), edge_color::horizontal);
-        e.add_vertex(vertex_at(i, j));
-        e.add_vertex(vertex_at(i + 1, j));
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
+        for(int i = 0; i < nx; ++i) {
+          //     0
+          // 0 ----- 1
+          //     1
+          auto& e = edge_at(i, j, k, edge_color::horizontal);
+          e = Edge(&e - edges_.data(), edge_color::horizontal);
+          e.add_vertex(vertex_at(i, j, k));
+          e.add_vertex(vertex_at(i + 1, j, k));
 
-        if(j > 0 || periodic)
-          e.add_face(face_at(i, j - 1, face_color::upward));
-        if(j < ny || periodic)
-          e.add_face(face_at(i, j, face_color::downward));
-      }
-    for(int j = 0; j < ny; ++j)
-      for(int i = 0; i < nx; ++i) {
-        // 0
-        //  \  0
-        //   \ 
+          if(j > 0 || periodic)
+            e.add_face(face_at(i, j - 1, k, face_color::upward));
+          if(j < ny || periodic)
+            e.add_face(face_at(i, j, k, face_color::downward));
+        }
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < ny; ++j)
+        for(int i = 0; i < nx; ++i) {
+          // 0
+          //  \  0
+          //   \ 
         // 1  \ 
         //     1
-        auto& e = edge_at(i, j, edge_color::diagonal);
-        e = Edge(&e - edges_.data(), edge_color::diagonal);
-        e.add_vertex(vertex_at(i, j));
-        e.add_vertex(vertex_at(i + 1, j + 1));
+          auto& e = edge_at(i, j, k, edge_color::diagonal);
+          e = Edge(&e - edges_.data(), edge_color::diagonal);
+          e.add_vertex(vertex_at(i, j, k));
+          e.add_vertex(vertex_at(i + 1, j + 1, k));
 
-        e.add_face(face_at(i, j, face_color::downward));
-        e.add_face(face_at(i, j, face_color::upward));
-      }
-    for(int j = 0; j < ny; ++j)
-      for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
-        //     0
-        // \^^^|\ 
+          e.add_face(face_at(i, j, k, face_color::downward));
+          e.add_face(face_at(i, j, k, face_color::upward));
+        }
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < ny; ++j)
+        for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
+          //     0
+          // \^^^|\ 
         //  \1 | \ 
         //   \ | 0\ 
         //    \|___\ 
         //     1
-        auto& e = edge_at(i, j, edge_color::vertical);
-        e = Edge(&e - edges_.data(), edge_color::vertical);
-        e.add_vertex(vertex_at(i, j));
-        e.add_vertex(vertex_at(i, j + 1));
+          auto& e = edge_at(i, j, k, edge_color::vertical);
+          e = Edge(&e - edges_.data(), edge_color::vertical);
+          e.add_vertex(vertex_at(i, j, k));
+          e.add_vertex(vertex_at(i, j + 1, k));
 
-        if(i < nx || periodic)
-          e.add_face(face_at(i, j, face_color::upward));
-        if(i > 0 || periodic)
-          e.add_face(face_at(i - 1, j, face_color::downward));
-      }
+          if(i < nx || periodic)
+            e.add_face(face_at(i, j, k, face_color::upward));
+          if(i > 0 || periodic)
+            e.add_face(face_at(i - 1, j, k, face_color::downward));
+        }
 
-    for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
-      for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
-        auto& v = vertex_at(i, j);
-        //  1   2
-        //   \  |
-        //    \ |
-        //     \|
-        // 0---------- 3
-        //      |\ 
+    for(int k = 0; k < nz; ++k)
+      for(int j = 0; j < (periodic ? ny : ny + 1); ++j)
+        for(int i = 0; i < (periodic ? nx : nx + 1); ++i) {
+          auto& v = vertex_at(i, j, k);
+          //  1   2
+          //   \  |
+          //    \ |
+          //     \|
+          // 0---------- 3
+          //      |\ 
         //      | \ 
         //      |  \ 
         //      5   4
-        if(i > 0 || periodic) //
-          v.add_edge(edge_at(i - 1, j, edge_color::horizontal));
-        if(i > 0 && j > 0 || periodic) //
-          v.add_edge(edge_at(i - 1, j - 1, edge_color::diagonal));
-        if(j > 0 || periodic) //
-          v.add_edge(edge_at(i, j - 1, edge_color::vertical));
-        if(i < nx || periodic) //
-          v.add_edge(edge_at(i, j, edge_color::horizontal));
-        if(i < nx && j < ny || periodic) //
-          v.add_edge(edge_at(i, j, edge_color::diagonal));
-        if(j < ny || periodic) //
-          v.add_edge(edge_at(i, j, edge_color::vertical));
+          if(i > 0 || periodic) //
+            v.add_edge(edge_at(i - 1, j, k, edge_color::horizontal));
+          if(i > 0 && j > 0 || periodic) //
+            v.add_edge(edge_at(i - 1, j - 1, k, edge_color::diagonal));
+          if(j > 0 || periodic) //
+            v.add_edge(edge_at(i, j - 1, k, edge_color::vertical));
+          if(i < nx || periodic) //
+            v.add_edge(edge_at(i, j, k, edge_color::horizontal));
+          if(i < nx && j < ny || periodic) //
+            v.add_edge(edge_at(i, j, k, edge_color::diagonal));
+          if(j < ny || periodic) //
+            v.add_edge(edge_at(i, j, k, edge_color::vertical));
 
-        //    1
-        //   \  |
-        // 0  \ |  2
-        //     \|
-        //  ----------
-        //      |\ 
-        //   5  | \ 3
-        //      |  \ 
-        //        4
-        if(i > 0 && j > 0 || periodic) {
-          v.add_face(face_at(i - 1, j - 1, face_color::upward));
-          v.add_face(face_at(i - 1, j - 1, face_color::downward));
+          //    1
+          //   \  |
+          // 0  \ |  2
+          //     \|
+          //  ----------
+          //      |\ 
+          //   5  | \ 3
+          //      |  \ 
+          //        4
+          if(i > 0 && j > 0 || periodic) {
+            v.add_face(face_at(i - 1, j - 1, k, face_color::upward));
+            v.add_face(face_at(i - 1, j - 1, k, face_color::downward));
+          }
+          if(i < nx && j > 0 || periodic) //
+            v.add_face(face_at(i, j - 1, k, face_color::upward));
+          if(i < nx && j < ny || periodic) {
+            v.add_face(face_at(i, j, k, face_color::downward));
+            v.add_face(face_at(i, j, k, face_color::upward));
+          }
+          if(i > 0 && j < ny || periodic)
+            v.add_face(face_at(i - 1, j, k, face_color::downward));
         }
-        if(j > 0 || periodic) //
-          v.add_face(face_at(i, j - 1, face_color::upward));
-        if(i < nx && j < ny || periodic) {
-          v.add_face(face_at(i, j, face_color::downward));
-          v.add_face(face_at(i, j, face_color::upward));
-        }
-        v.add_face(face_at(i - 1, j, face_color::downward));
-      }
   }
 
   std::vector<Face> const& faces() const { return faces_; }
@@ -290,6 +301,7 @@ public:
 
   auto nx() const { return nx_; }
   auto ny() const { return ny_; }
+  auto nz() const { return nz_; }
 
 private:
   std::vector<Face> faces_;
@@ -298,6 +310,7 @@ private:
 
   int nx_;
   int ny_;
+  int nz_;
 };
 
 template <typename O, typename T>

@@ -6,7 +6,7 @@
 
 int main() {
   int w = 20;
-  Mesh m{w, w, true};
+  mylibInterface::Mesh m{w, w, 1, true};
   mylib::FaceData<double> out(m);
   mylib::EdgeData<double> in(m);
 

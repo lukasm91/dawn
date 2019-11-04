@@ -6,7 +6,7 @@
 
 int main() {
   int w = 32;
-  mylib::Grid m{w, w, true};
+  mylib::Grid m{w, w, 1, true};
   mylib::FaceData<double> in(m), out(m);
 
   for(auto& f : m.faces()) {

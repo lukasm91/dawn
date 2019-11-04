@@ -31,11 +31,11 @@ Vertex const& Edge::vertex(size_t i) const { return *vertices_[i]; }
 Face const& Edge::face(size_t i) const { return *faces_[i]; }
 
 std::ostream& toVtk(Grid const& grid, std::ostream& os) {
-  os << "# vtk DataFile Version 3.0\n2D scalar data\nASCII\nDATASET "
+  os << "# vtk DataFile Version 3.0\n3D scalar data\nASCII\nDATASET "
         "UNSTRUCTURED_GRID\n";
   os << "POINTS " << grid.vertices().size() << " float\n";
   for(auto v : grid.vertices())
-    os << v.x() << " " << v.y() << " 0\n";
+    os << v.x() << " " << v.y() << " " << v.z() << "\n";
 
   int fcnt = 0;
   for(auto& f : grid.faces())
@@ -53,9 +53,7 @@ std::ostream& toVtk(Grid const& grid, std::ostream& os) {
       os << "5\n";
   os << "CELL_DATA " << fcnt << '\n';
   return os;
-
-  return os;
-} // namespace lib_lukas
+}
 std::ostream& toVtk(std::string const& name, FaceData<double> const& f_data, Grid const& grid,
                     std::ostream& os) {
   os << "SCALARS " << name << "  float 1\nLOOKUP_TABLE default\n";
